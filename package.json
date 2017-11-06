@@ -2,7 +2,7 @@
   "name": "koa-api",
   "version": "1.0.0",
   "description": "Example REST API using KoaJS and Knex",
-  "repository" : {
+  "repository": {
     "type": "git",
     "url": "https://github.com/djedi-knight/koa-api"
   },
@@ -18,6 +18,8 @@
     "mocha": "^4.0.1"
   },
   "dependencies": {
-    "koa": "^2.3.0"
+    "knex": "^0.13.0",
+    "koa": "^2.3.0",
+    "pg": "^7.4.0"
   }
 }
