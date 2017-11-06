@@ -34,6 +34,14 @@ until finished
 
 ## Development
 
+### Knex CLI
+
+Run the following command to globally install the Knex CLI:
+
+```
+npm install knex -g
+```
+
 ### Creating a Migration
 
 Run the following command to create a new migration file:
@@ -42,9 +50,9 @@ Run the following command to create a new migration file:
 knex migrate:make name
 ```
 
-where *name* is the name of the migration
+where *name* is the name of the migration file
 
-### Running Migrations
+### Applying Migrations
 
 Run the following to apply the latest migrations to the database:
 
@@ -52,11 +60,35 @@ Run the following to apply the latest migrations to the database:
 knex migrate:latest --env environment
 ```
 
-where *environment* is the target environment to run the migrations on
+where *environment* is the name of the environment to apply the migrations
+
+### Creating Seed Files
+
+Run the following to create a seed file to populate the database:
+
+```
+knex seed:make name
+```
+
+where *name* is the name of the seed file
+
+### Applying Seeds
+
+Run the following to apply the seeding to the database:
+
+```
+knex seed:run --env environment
+```
+
+where *environment* is the name of the environment to apply the seeds
 
 ## Testing
 
-*Explain how to run the automated tests for this system*
+Run automated tests for the system using the following command:
+
+```
+npm test
+```
 
 ### Break down into end to end tests
 
