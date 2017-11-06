@@ -1,4 +1,6 @@
 const Koa = require('koa');
+const bodyParser = require('koa-bodyparser');
+
 const indexRoutes = require('./routes/index');
 const movieRoutes = require('./routes/movies');
 
@@ -6,7 +8,8 @@ const movieRoutes = require('./routes/movies');
 const app = new Koa();
 const PORT = process.env.PORT || 1337;
 
-// load routes into app
+// load middleware/ routes into app
+app.use(bodyParser());
 app.use(indexRoutes.routes());
 app.use(movieRoutes.routes());
 
