@@ -5,6 +5,13 @@ function getAllMovies() {
   .select('*');
 };
 
+function getSingleMovie(id) {
+  return knex('movies')
+  .select('*')
+  .where({ id: parseInt(id) });
+};
+
 module.exports = {
-  getAllMovies
+  getAllMovies,
+  getSingleMovie
 };
