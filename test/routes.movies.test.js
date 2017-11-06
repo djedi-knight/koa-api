@@ -140,4 +140,39 @@ describe('routes : movies', () => {
     });
   });
 
+  describe('PUT /api/v1/movies/:id', () => {
+    it('should return the movie that was updated', (done) => {
+      knex('movies')
+      .select('*')
+      .then((movie) => {
+        const movieObject = movie[0];
+        chai.request(server)
+        .put(`/api/v1/movies/${movieObject.id}`)
+        .send({
+          rating: 9
+        })
+        .end((err, res) => {
+          // there should be no errors
+          should.not.exist(err);
+          // there should be a 200 status code
+          res.status.should.equal(200);
+          // the response should be JSON
+          res.type.should.equal('application/json');
+          // the JSON response body should have a
+          // key-value pair of {"status": "success"}
+          res.body.status.should.eql('success');
+          // the JSON response body should have a
+          // key-value pair of {"data": 1 movie object}
+          res.body.data[0].should.include.keys(
+            'id', 'name', 'genre', 'rating', 'explicit'
+          );
+          // ensure the movie was in fact updated
+          const newMovieObject = res.body.data[0];
+          newMovieObject.rating.should.not.eql(movieObject.rating);
+          done();
+        });
+      });
+    });
+  });
+
 });
