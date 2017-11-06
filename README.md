@@ -16,9 +16,9 @@ Give examples
 
 ### Installation
 
-*A step by step series of examples that tell you have to get a development env running
+*A step by step series of examples that tell you have to get a development env running*
 
-Say what the step will be*
+*Say what the step will be*
 
 ```
 Give the example
@@ -44,7 +44,7 @@ knex migrate:make name
 
 where *name* is the name of the migration
 
-### Run migrations
+### Running Migrations
 
 Run the following to apply the latest migrations to the database:
 
