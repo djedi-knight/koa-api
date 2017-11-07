@@ -8,6 +8,8 @@ chai.use(chaiHttp);
 const server = require('../src/server/index');
 const knex = require('../src/server/db/connection');
 
+const Movie = require('../src/server/db/models/movie');
+
 describe('routes : movies', () => {
 
   beforeEach(() => {
@@ -58,8 +60,8 @@ describe('routes : movies', () => {
         // key-value pair of {"status": "success"}
         res.body.status.should.eql('success');
         // the JSON response body should have a
-        // key-value pair of {"data": 1 movie object}
-        res.body.data[0].should.include.keys(
+        // key-value pair of {"data": movie object}
+        res.body.data.should.include.keys(
           'id', 'name', 'genre', 'rating', 'explicit'
         );
         done();
@@ -109,19 +111,19 @@ describe('routes : movies', () => {
         // key-value pair of {"status": "success"}
         res.body.status.should.eql('success');
         // the JSON response body should have a
-        // key-value pair of {"data": 1 movie object}
-        res.body.data[0].should.include.keys(
+        // key-value pair of {"data": movie object}
+        res.body.data.should.include.keys(
           'id', 'name', 'genre', 'rating', 'explicit'
         );
         done();
       });
     });
 
-    it('should throw an error if the payload is malformed', (done) => {
+    it('should throw an error if the payload contains malformed data', (done) => {
       chai.request(server)
       .post('/api/v1/movies')
       .send({
-        name: 'Titanic'
+        rating: -1
       })
       .end((err, res) => {
         // there should an error
@@ -135,6 +137,11 @@ describe('routes : movies', () => {
         res.body.status.should.eql('error');
         // the JSON response body should have a message key
         should.exist(res.body.message);
+        // the JSON response body should have a
+        // key-value pair of {"errors": errors object}
+        res.body.errors.should.include.keys(
+          'name', 'genre', 'rating', 'explicit'
+        );
         done();
       });
     });
@@ -142,10 +149,11 @@ describe('routes : movies', () => {
 
   describe('PUT /api/v1/movies/:id', () => {
     it('should return the movie that was updated', (done) => {
-      knex('movies')
-      .select('*')
+      // knex('movies')
+      // .select('*')
+      Movie.where({id: 1}).fetch()
       .then((movie) => {
-        const movieObject = movie[0];
+        const movieObject = movie.attributes;
         chai.request(server)
         .put(`/api/v1/movies/${movieObject.id}`)
         .send({

@@ -20,8 +20,9 @@ router.get(BASE_URL, async (ctx) => {
 
 router.get(`${BASE_URL}/:id`, async (ctx) => {
   try {
-    const movie = await queries.getSingleMovie(ctx.params.id);
-    if (movie.length) {
+    // const movie = await queries.getSingleMovie(ctx.params.id);
+    const movie = await Movie.where({id: ctx.params.id}).fetch();
+    if (movie) {
       ctx.body = {
         status: 'success',
         data: movie
@@ -40,24 +41,18 @@ router.get(`${BASE_URL}/:id`, async (ctx) => {
 
 router.post(`${BASE_URL}`, async (ctx) => {
   try {
-    const movie = await queries.addMovie(ctx.request.body);
-    if (movie.length) {
-      ctx.status = 201;
-      ctx.body = {
-        status: 'success',
-        data: movie
-      };
-    } else {
-      ctx.status = 400;
-      ctx.body = {
-        status: 'error',
-        message: 'Something went wrong.'
-      };
-    }
+    // const movie = await queries.addMovie(ctx.request.body);
+    const movie = await Movie.forge(ctx.request.body).save();
+    ctx.status = 201;
+    ctx.body = {
+      status: 'success',
+      data: movie
+    };
   } catch (err) {
     ctx.status = 400;
     ctx.body = {
       status: 'error',
+      errors: err.errors || {},
       message: err.message || 'Sorry, an error has occurred.'
     };
   }
