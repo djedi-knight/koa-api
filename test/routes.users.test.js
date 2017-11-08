@@ -169,7 +169,7 @@ describe('routes : users', () => {
       chai.request(server)
       .post('/api/v1/users')
       .send({
-        name: 'user@email.com',
+        email: 'user@email.com',
         password: 'password'
       })
       .end((err, res) => {
@@ -184,9 +184,9 @@ describe('routes : users', () => {
         // key-value pair of {"status": "success"}
         res.body.status.should.eql('success');
         // the JSON response body should have a
-        // key-value pair of {"data": movie object}
+        // key-value pair of {"data": user object}
         res.body.data.should.include.keys(
-          'id', 'name', 'genre', 'rating', 'explicit'
+          'id', 'email'
         );
         done();
       });

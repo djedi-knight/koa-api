@@ -4,6 +4,7 @@ const bodyParser = require('koa-bodyparser');
 
 const indexRoutes = require('./routes/index');
 const movieRoutes = require('./routes/movies');
+const userRoutes = require('./routes/users');
 
 // define app and related variables
 const app = new Koa();
@@ -15,6 +16,7 @@ app.use(bodyParser());
 // load routes
 app.use(indexRoutes.routes());
 app.use(movieRoutes.routes());
+app.use(userRoutes.routes());
 
 // create server
 const server = app.listen(PORT, () => {

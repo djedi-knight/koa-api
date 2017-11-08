@@ -9,12 +9,10 @@ const bookshelf = require('bookshelf')(knex);
 bookshelf.plugin(Schema());
 
 module.exports = bookshelf.Model.extend({
-  tableName: 'movies'
+  tableName: 'users'
 }, {
   schema: [
-    Fields.StringField('name', {required: true}),
-    Fields.StringField('genre', {required: true}),
-    Fields.IntField('rating', {required: true, natural: true}),
-    Fields.BooleanField('explicit', {required: true})
+    Fields.EmailField('email', {required: true}),
+    Fields.EncryptedStringField('password', {required: true})
   ]
 });
