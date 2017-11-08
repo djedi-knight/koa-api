@@ -35,7 +35,11 @@ router.get(`${BASE_URL}/:id`, async (ctx) => {
       };
     }
   } catch (err) {
-    console.log(err)
+    ctx.status = 400;
+    ctx.body = {
+      status: 'error',
+      message: 'Sorry, an error has occurred.'
+    };
   }
 });
 
