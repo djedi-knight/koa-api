@@ -91,27 +91,26 @@ router.put(`${BASE_URL}/:id`, async (ctx) => {
 
 router.delete(`${BASE_URL}/:id`, async (ctx) => {
   try {
-    const movie = await queries.deleteMovie(ctx.params.id);
-    if (movie.length) {
-      ctx.status = 200;
-      ctx.body = {
-        status: 'success',
-        data: movie
-      };
-    } else {
+    // const movie = await queries.deleteMovie(ctx.params.id);
+    const movie = await Movie.where({id: ctx.params.id}).destroy({require: true});
+    ctx.body = {
+      status: 'success',
+    };
+  } catch (err) {
+    if (err.message == 'No Rows Deleted') {
       ctx.status = 404;
       ctx.body = {
         status: 'error',
         message: 'That movie does not exist.'
       };
+    } else {
+      ctx.status = 400;
+      ctx.body = {
+        status: 'error',
+        message: 'Sorry, an error has occurred.'
+      };
     }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 'error',
-      message: err.message || 'Sorry, an error has occurred.'
-    };
   }
-})
+});
 
 module.exports = router;
