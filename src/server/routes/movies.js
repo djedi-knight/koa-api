@@ -21,25 +21,25 @@ router.get(BASE_URL, async (ctx) => {
 router.get(`${BASE_URL}/:id`, async (ctx) => {
   try {
     // const movie = await queries.getSingleMovie(ctx.params.id);
-    const movie = await Movie.where({id: ctx.params.id}).fetch();
-    if (movie) {
-      ctx.body = {
-        status: 'success',
-        data: movie
-      };
-    } else {
+    const movie = await Movie.where({id: ctx.params.id}).fetch({require: true});
+    ctx.body = {
+      status: 'success',
+      data: movie
+    };
+  } catch (err) {
+    if (err.message == 'EmptyResponse') {
       ctx.status = 404;
       ctx.body = {
         status: 'error',
         message: 'That movie does not exist.'
       };
+    } else {
+      ctx.status = 400;
+      ctx.body = {
+        status: 'error',
+        message: 'Sorry, an error has occurred.'
+      };
     }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 'error',
-      message: 'Sorry, an error has occurred.'
-    };
   }
 });
 
@@ -64,26 +64,28 @@ router.post(`${BASE_URL}`, async (ctx) => {
 
 router.put(`${BASE_URL}/:id`, async (ctx) => {
   try {
-    const movie = await queries.updateMovie(ctx.params.id, ctx.request.body);
-    if (movie.length) {
-      ctx.status = 200;
-      ctx.body = {
-        status: 'success',
-        data: movie
-      };
-    } else {
+    // const movie = await queries.updateMovie(ctx.params.id, ctx.request.body);
+    const movie = await Movie.where({id: ctx.params.id}).fetch({require: true});
+    const updatedMovie = await movie.save(ctx.request.body);
+    ctx.body = {
+      status: 'success',
+      data: updatedMovie
+    };
+  } catch (err) {
+    if (err.message == 'EmptyResponse') {
       ctx.status = 404;
       ctx.body = {
         status: 'error',
         message: 'That movie does not exist.'
       };
+    } else {
+      ctx.status = 400;
+      ctx.body = {
+        status: 'error',
+        errors: err.errors || {},
+        message: 'Sorry, an error has occurred.'
+      };
     }
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 'error',
-      message: err.message || 'Sorry, an error has occurred.'
-    };
   }
 });
 
