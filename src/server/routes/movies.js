@@ -42,7 +42,7 @@ router.get(`${BASE_URL}/:id`, async (ctx) => {
 router.post(`${BASE_URL}`, async (ctx) => {
   try {
     // const movie = await queries.addMovie(ctx.request.body);
-    const movie = await Movie.forge(ctx.request.body).save();
+    const movie = await Movie.forge(ctx.request.body, {parse: true}).save();
     ctx.status = 201;
     ctx.body = {
       status: 'success',

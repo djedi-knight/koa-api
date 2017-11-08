@@ -119,12 +119,10 @@ describe('routes : movies', () => {
       });
     });
 
-    it('should throw an error if the payload contains malformed data', (done) => {
+    it('should throw an error if the payload is missing required data', (done) => {
       chai.request(server)
       .post('/api/v1/movies')
-      .send({
-        rating: -1
-      })
+      .send()
       .end((err, res) => {
         // there should an error
         should.exist(err);
@@ -141,6 +139,36 @@ describe('routes : movies', () => {
         // key-value pair of {"errors": errors object}
         res.body.errors.should.include.keys(
           'name', 'genre', 'rating', 'explicit'
+        );
+        done();
+      });
+    });
+
+    it('should throw an error if the payload contains malformed data', (done) => {
+      chai.request(server)
+      .post('/api/v1/movies')
+      .send({
+        name: true,
+        genre: 10,
+        rating: 'five',
+        explicit: false
+      })
+      .end((err, res) => {
+        // there should an error
+        should.exist(err);
+        // there should be a 400 status code
+        res.status.should.equal(400);
+        // the response should be JSON
+        res.type.should.equal('application/json');
+        // the JSON response body should have a
+        // key-value pair of {"status": "error"}
+        res.body.status.should.eql('error');
+        // the JSON response body should have a message key
+        should.exist(res.body.message);
+        // the JSON response body should have a
+        // key-value pair of {"errors": errors object}
+        res.body.errors.should.include.keys(
+          'rating'
         );
         done();
       });
